@@ -5,6 +5,7 @@ def read_file(file_name):
     with open(file_name, 'r') as file:
         return file.read().splitlines()  # возвращаем список из строк файла
 
+
 def get_cook_book(file_name):
     c = []  # блок для рецепта  с ингридиентами
     cook_book = {}  # итоговый словарь с рецептами
@@ -15,15 +16,36 @@ def get_cook_book(file_name):
             i = 2
             ing_list = []
             for n in range(int(c[1])):  # проходим циклом по ингредиентам
-                ing = c[i].split('|')  # преобразуем строку с ингредиентами в список, разделяя по символу '|'
+                # преобразуем строку с ингредиентами в список, разделяя по
+                # символу '|'
+                ing = c[i].split('|')
                 ing_list.append({'ingredient_name': ing[0], 'quantity': ing[1],
                                  'measure': ing[2]})  # формируем список словарей с ингредиентами
                 i += 1
-            cook_book.update({c[0]: ing_list}) #добовляем получившейся список в словарь с ключем первого элемента блока
-            c = [] #обмнуляем наш блок
+            # добовляем получившейся список в словарь с ключем первого элемента
+            # блока
+            cook_book.update({c[0]: ing_list})
+            c = []  # обмнуляем наш блок
     return cook_book
+
+
+def get_shop_list_by_dishes(dishes, person_count):
+
+    cook_book = get_cook_book('recipes.txt')
+
+    shop_list = {}
+    for d in dishes:
+        for s in cook_book[d]:
+            ingr = s['ingredient_name']
+            meas = s['measure']
+            quant = s['quantity']
+
+            shop_list.update(
+                {ingr: {'measure': meas, 'quanitiy': int(quant) * person_count}})
+
+    return shop_list
+
 
 if __name__ == '__main__':
 
-
-    print(get_cook_book('recipes.txt'))
+    print(get_shop_list_by_dishes(['Запеченный картофель', 'Омлет'], 2))
