@@ -8,32 +8,32 @@ def read_file(file_name):
         return  sting_list# возвращаем список из строк файла
 
 
-def get_cook_book(file_name):
-    c = []  # блок для рецепта
-    cook_book = {}  # итоговый словарь с рецептами
-    for w in read_file(file_name):  # читаем строки из файла
-        if w != '':  # пока не дошли до пустой строки наполняем список рецептами
-            c.append(w)
-        else:
-            i = 2
-            ing_list = []
-            for n in range(int(c[1])):  # проходим циклом по ингредиентам
-                # преобразуем строку с ингредиентами в список, разделяя по
-                # символу '|'
-                ing = c[i].split('|')
-                ing_list.append({'ingredient_name': ing[0], 'quantity': ing[1],
-                                 'measure': ing[2]})  # формируем список словарей с ингредиентами
-                i += 1
-            # добовляем получившейся список в словарь с ключем первого элемента
-            # блока
-            cook_book.update({c[0]: ing_list})
-            c = []  # обмнуляем наш блок
+def get_cook_book():
+
+    with open('recipes.txt', 'r') as file_work:
+        cook_book={}
+        for line in file_work:
+            dish_name = line[:-1]
+            counter = int(file_work.readline())
+            list_of_ingridient = []
+            for i in range(counter):
+                temp_dict = {}
+                ingridient = file_work.readline()
+                ing = ingridient.split('|')
+                temp_dict.update({'ingredient_name': ing[0], 'quantity': ing[1],
+                             'measure': ing[2][:-1]})
+                list_of_ingridient.append(temp_dict)
+            cook_book.update({dish_name: list_of_ingridient})
+            file_work.readline()
+
     return cook_book
+
+
 
 
 def get_shop_list_by_dishes(dishes, person_count):
 
-    cook_book = get_cook_book('recipes.txt')
+    cook_book = get_cook_book()
 
     shop_list = {}
     for d in dishes:
@@ -48,8 +48,13 @@ def get_shop_list_by_dishes(dishes, person_count):
     return shop_list
 
 
+
 if __name__ == '__main__':
 
-    print(get_cook_book('recipes.txt'))
+
+
+    # print(cook_book)
+    # print(get_cook_book('recipes.txt'))
+    print(get_cook_book())
 
     print(get_shop_list_by_dishes(['Запеченный картофель', 'Омлет'], 2))
