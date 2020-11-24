@@ -3,13 +3,15 @@
 
 def read_file(file_name):
     with open(file_name, 'r') as file:
-        return file.read().splitlines()  # возвращаем список из строк файла
+        sting_list = file.read().splitlines()
+        sting_list.append('') #Добавляем пустую строку в конец файла, нажно для того что бы записать в словарь все рецепты, так как функция get_cook_book разделяет блюда по пустой строке.
+        return  sting_list# возвращаем список из строк файла
 
 
 def get_cook_book(file_name):
-    c = []  # блок для рецепта  с ингридиентами
+    c = []  # блок для рецепта
     cook_book = {}  # итоговый словарь с рецептами
-    for w in read_file('recipes.txt'):  # читаем строки из файла
+    for w in read_file(file_name):  # читаем строки из файла
         if w != '':  # пока не дошли до пустой строки наполняем список рецептами
             c.append(w)
         else:
@@ -47,5 +49,7 @@ def get_shop_list_by_dishes(dishes, person_count):
 
 
 if __name__ == '__main__':
+
+    print(get_cook_book('recipes.txt'))
 
     print(get_shop_list_by_dishes(['Запеченный картофель', 'Омлет'], 2))
